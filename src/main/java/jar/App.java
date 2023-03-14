@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +27,10 @@ public class App {
 	private static JTextField search;
 	private static JButton	btnSearch;
 	private static JPanel boxPanel;
-	final static String SEARCH_PATH = "I:\\2022";
+	final static String SEARCH_PATH0 = "I:\\2020";
+	final static String SEARCH_PATH1 = "I:\\2021";
+	final static String SEARCH_PATH2 = "I:\\2022";
+	final static String SEARCH_PATH3 = "I:\\2023";
 //	final static String SEARCH_PATH = "C:";
 	final static String FILE_EXTENSION = ".pdf";
 	/**
@@ -79,21 +81,31 @@ public class App {
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String searchString = search.getText().trim().toUpperCase();
-				try (Stream<Path> run = Files.walk(Paths.get(SEARCH_PATH))) {
-					List<String> fileList = run.filter(p -> !Files.isDirectory(p)).map(p -> p.toString()).filter(f -> f.endsWith(FILE_EXTENSION)).filter(f -> f.toUpperCase().contains(searchString)).filter(f -> f.length() > searchString.length())
-							.collect(Collectors.toList());
+				List<String> fileList;
+				try {
+					fileList = getList(SEARCH_PATH0, searchString);
+					fileList.addAll(getList(SEARCH_PATH1, searchString));
+					fileList.addAll(getList(SEARCH_PATH2, searchString));
+					fileList.addAll(getList(SEARCH_PATH3, searchString));
+					
 					if(fileList.size() == 0) {
 						JOptionPane.showMessageDialog(null, "No File Found", "No Results", JOptionPane.ERROR_MESSAGE);
 					} else {
 						String resultFilePath = fileList.get(0);
 						Desktop.getDesktop().open(new File(resultFilePath));
 					}
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
 	}
-
+	
+	public List<String> getList(String path, String searchString) throws Exception {
+		try (Stream<Path> run = Files.walk(Paths.get(path))) {
+			return run.filter(p -> !Files.isDirectory(p)).map(p -> p.toString()).filter(f -> f.endsWith(FILE_EXTENSION)).filter(f -> f.toUpperCase().contains(searchString)).filter(f -> f.length() > searchString.length())
+					.collect(Collectors.toList());
+		}
+	}
 }

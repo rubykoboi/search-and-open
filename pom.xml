@@ -2,5 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.journaldev.maven</groupId>
   <artifactId>search-and-open</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
+<!--ver. 1.0.0
+	1. included 2020 folder to the sources
+-->
 </project>
